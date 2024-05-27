@@ -23,7 +23,16 @@ func main() {
 		return
 	}
 
-	config := createConfig()
+	config, err := createConfig()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	output, err := createOutput(userInput, config)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	if userInput.IsResource {
 		resource, err := findResource(userInput.ResourceName, config)
@@ -31,10 +40,25 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		// request password
+
+		password, err := requestPassword()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		secret.err := resource.Decode(password)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		output.Send(secret)
 
 	}
 
+}
+
+func createOutput(userInput UserInput, config Config) (models.Output, error) {
+	panic("unimplemented")
 }
 
 func findResource(s string, config Config) (models.Resource, error) {
@@ -53,6 +77,6 @@ func createUserInput(s []string) UserInput {
 	}
 }
 
-func createConfig() Config {
+func createConfig() (Config, error) {
 	panic("unimplemented")
 }
