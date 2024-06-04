@@ -1,0 +1,50 @@
+@startuml
+!define RECTANGLE class
+RECTANGLE User {
+    + enterCommand()
+}
+
+RECTANGLE Main {
+    + parseCommand()
+    + executeCommand()
+}
+
+RECTANGLE Command {
+    + validateCommand()
+    + callSubmodule()
+}
+
+RECTANGLE addCommand {
+    + generatePassword()
+    + encryptPassword()
+    + savePassword()
+}
+
+RECTANGLE PasswordGenerator {
+    + generate()
+}
+
+RECTANGLE Encryption {
+    + encrypt()
+    + decrypt()
+}
+
+RECTANGLE Storage {
+    + writeFile()
+    + readFile()
+}
+
+User -> Main : enterCommand()
+Main -> Command : parseCommand()
+Command -> addCommand : callSubmodule(addCommand)
+addCommand -> PasswordGenerator : generatePassword()
+PasswordGenerator -> addCommand : password
+addCommand -> Encryption : encryptPassword()
+Encryption -> addCommand : encryptedPassword
+addCommand -> Storage : savePassword(encryptedPassword)
+Storage -> addCommand : confirmation
+addCommand -> Command : confirmation
+Command -> Main : confirmation
+Main -> User : confirmation
+
+@enduml
